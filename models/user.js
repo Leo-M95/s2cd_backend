@@ -19,19 +19,19 @@ const userSchema = mongoose.Schema({
         type:String,
         required:true
     },
-    // phoneNumber:{
-    //     type:Number,
-    //     required:true
-    // },
+    phoneNumber:{
+        type:String,
+        required:true
+    },
     role:{
         type:String,
         required:true,
         default:"Customer"
     },
-    // dateOfBirth:{
-    //     type:Date,
-    //     required:true,
-    // },
+    dateOfBirth: {
+        type: Date,
+        required: true
+    },
     gender:{
         type:String,
         required:true,

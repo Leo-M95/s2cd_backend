@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.js";
 import bcrypt from "bcrypt";
 
-//function for user registration
+// 01.function for user registration
 export async function registerUser(req,res){
     const hashedPassword = bcrypt.hashSync(req.body.password,10)
 
@@ -14,7 +14,7 @@ export async function registerUser(req,res){
         password:hashedPassword,
         phoneNumber:req.body.phoneNumber,
         role:req.body.role,
-        dateOfBirth:req.body.dateOfBirth,
+        dateOfBirth:new Date(req.body.dateOfBirth),
         gender:req.body.gender,
         profilePic:req.body.profilePic
     }
@@ -32,7 +32,7 @@ export async function registerUser(req,res){
     //         })
     //     }
     // )
-    try { user = await User.save()
+    try { await user.save()
         res.json({
             message:"Registration successful"
         })
@@ -40,13 +40,16 @@ export async function registerUser(req,res){
     } catch (err) {
         res.json({
             message:"Registration unsuccessful",
-            error : err
+            error : err.message
         })
 
     }
 }
+//---------------------------------------------------------->
 
-//function for user login
+
+
+// 02. function for user login
 
 export async function userLogin(req,res){
     // const email = req.body.email
