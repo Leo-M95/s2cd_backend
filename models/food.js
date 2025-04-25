@@ -4,12 +4,11 @@ const foodSchema = mongoose.Schema({
 
     productCategory:{
         type:String,
-        required:true
+        required:false
     },
     productId:{
         type:String,
-        required:true,
-        unique: true
+        unique:true
     },
     productName:{
         type:String,
@@ -35,7 +34,7 @@ const foodSchema = mongoose.Schema({
         {type:String}
     ],
     productImage:[
-        {String}
+        {type:String}
     ],
     isAvailable:{
         type:Boolean,
@@ -45,6 +44,11 @@ const foodSchema = mongoose.Schema({
 
 })
 
+
+
 const Food = mongoose.model("food",foodSchema)
 
 export default Food;
+
+
+

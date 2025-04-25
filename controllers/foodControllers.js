@@ -3,7 +3,7 @@ import { isAdmin } from "./userControllers.js";
 
 
 //function to add food to the menu
-export function addFood(req,res){
+export async function addFood(req,res){
     // if (req.user==null) {
     //     res.status(403).json({
     //         message:"Unauthorized Access"
@@ -24,19 +24,36 @@ export function addFood(req,res){
         return
     }
 
-    const food = new Food(
-        // productCategory:req.body.productCategory,
-        // productId:req.body.productId,
-        // productName:req.body.productName,
-        // labeledPrice:req.body.labeledPrice,
-        // price:req.body.price,
-        // productImage:req.body.productImage,
-        // prepTime:req.body.prepTime,
-        // portion:req.body.portion,
-        // mainIngredients:req.body.mainIngredients,
-        // isAvailable:req.body.isAvailable 
-        //replaced the above lines with below code
-        req.body)
+    async function results(req) {
+        let isUnique = false;
+        let newId;
+
+      
+        while (!isUnique) {
+          const prefix = req.body.productCategory?.slice(0, 2).toUpperCase() || 'PR';
+          const randomNum = Math.floor(1000 + Math.random() * 9000);
+          newId = `${prefix}${randomNum}`;
+          console.log(newId)
+          const existing = await Food.findOne({ productId: newId })
+          if (!existing) isUnique = true;
+        }
+      
+        return newId;
+      }; 
+
+    const productId= await results(req)
+    const food = new Food({
+        productCategory:req.body.productCategory,
+        productId:productId,
+        productName:req.body.productName,
+        labeledPrice:req.body.labeledPrice,
+        price:req.body.price,
+        productImage:req.body.productImage,
+        prepTime:req.body.prepTime,
+        portion:req.body.portion,
+        mainIngredients:req.body.mainIngredients,
+        isAvailable:req.body.isAvailable 
+})
 
     food.save().then(
         ()=>{
@@ -45,9 +62,10 @@ export function addFood(req,res){
             })
         }
     ).catch(
-        ()=>{
+        (err)=>{
             res.json({
-                message:"Item wasn't added"
+                message:"Item wasn't added",
+                error:err.message
             })
         }
     )
@@ -90,3 +108,14 @@ export async function deleteFood(req,res){
         
     }
 }
+
+
+
+
+
+
+       
+            
+            
+        
+ 

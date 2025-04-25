@@ -119,14 +119,16 @@ try{
             }catch(err){
                 res.json({
                     message:"Something went wrong",
-                    error:err
+                    error:err.message
                 })
 
             }
         
 }
 
-//is Admin function
+//------------------------------------------------------------------->
+
+//03. is Admin function
 
 export function isAdmin(req) {
  if(req.user==null){
