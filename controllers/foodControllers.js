@@ -109,6 +109,68 @@ export async function deleteFood(req,res){
     }
 }
 
+//function to update food
+
+export async function updateFood(req,res) {
+    if (!isAdmin(req)) {
+        res.status(403).json({
+            message:"You aren't authorized to update the menu"
+        })
+    }
+
+    const productId = req.params.productId
+    const updatingData = req.body
+
+    try {
+        await Food.updateOne({productId:productId},updatingData)
+        res.json({
+            message:"Product updated successfully"
+        })
+    } catch (error) {
+        res.status(500).json({
+            message:"Internal server error",
+            error:error.message
+        })
+    }
+    
+}
+
+
+export async function getFoodById(req,res){
+    const productId = req.params.productId
+
+    try {
+        const product = await Food.findOne(
+            {productId:productId}
+        )
+
+        if (product==null){
+            res.status(404).json({
+                message : "Item not found"
+            })
+            return
+        }
+
+       if (product.isAvailable){
+            res.json(product)
+       }else{
+        if(!isAdmin(req)){
+            res.status(404).json({
+                message:"Item not found"
+            })
+            return
+        }else{
+            res.json(product)
+        }
+       }
+    } catch (error) {
+        res.status(500).jason({
+            message:"Internal server error",
+            error:error.message
+        })
+    }
+}
+
 
 
 
