@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import userRoute from "./routes/userRoute.js";
 import jwtGenerator from "./controllers/jwtGenerator.js";
 import foodRoute from "./routes/foodRoute.js";
+import orderRoute from "./routes/orderRoute.js";
 
 
 
@@ -22,6 +23,7 @@ app.use(jwtGenerator)
 
 app.use("/user",userRoute)
 app.use("/food",foodRoute)
+app.use("/order",orderRoute)
 
 
 app.listen(5000,()=>{
