@@ -32,7 +32,7 @@ const orderSchema = mongoose.Schema({
         required:true
     },
     labeledTotal:{
-        type:String,
+        type:Number,
         required:true
     },
     product:[
