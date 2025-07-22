@@ -1,31 +1,41 @@
-import express from "express"
+import express from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
-import userRoute from "./routes/userRoute.js";
+import userRoute from "./routes/userRoute.js"; 
 import jwtGenerator from "./controllers/jwtGenerator.js";
 import foodRoute from "./routes/foodRoute.js";
 import orderRoute from "./routes/orderRoute.js";
+import dotenv from "dotenv";
+import cors from "cors";
+import itemRoute from "./routes/itemRoute.js";
+import reviewRoute from "./routes/reviewRoute.js";
+import mediaRouter from "./routes/mediaRoute.js";
+import path from "path";
+dotenv.config();
 
+const app = express();
+app.use(cors());
 
+mongoose
+  .connect(process.env.MONGODB_URL)
+  .then(() => {
+    console.log("Connected to the database");
+  })
+  .catch(() => {
+    console.log("Database connection failed");
+  });
 
+app.use(bodyParser.json());
+app.use(jwtGenerator);
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
-const app= express();
+app.use("/api/user", userRoute);
+app.use("/api/food", foodRoute);
+app.use("/api/order", orderRoute);
+app.use("/api/item", itemRoute);
+app.use("/api/review", reviewRoute);
+app.use("/api/media", mediaRouter);
 
-mongoose.connect("mongodb+srv://Admin:SC2d2025@cluster0.mvaguj6.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0").
-then(()=>{
-   console.log("Connected to the database") 
-}).catch(()=>{
-    console.log("Database connection failed")
-})
-
-app.use(bodyParser.json())
-app.use(jwtGenerator)
-
-app.use("/user",userRoute)
-app.use("/food",foodRoute)
-app.use("/order",orderRoute)
-
-
-app.listen(5000,()=>{
-    console.log("Server connected on port 5000")
-})
+app.listen(5000, () => {
+  console.log("Server connected on port 5000");
+});
