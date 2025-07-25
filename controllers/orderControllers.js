@@ -216,7 +216,7 @@ export async function viewOrder(req, res) {
 
       return res.status(200).json(response);
     }
-
+    //For steward
     if (isSteward(req)) {
       const pendingOrders = await Order.find({
         status: { $in: ["confirmed", "completed"] },
@@ -244,7 +244,6 @@ export async function viewOrder(req, res) {
     //For Admin
     if (isAdmin(req)) {
       const allOrders = await Order.find().sort({ date: 1 });
-      console.log(allOrders.length);
 
       const allOrderList = allOrders.map((order) => ({
         orderId: order.orderId,
@@ -257,6 +256,19 @@ export async function viewOrder(req, res) {
       return res.status(200).json(allOrderList);
     }
 
+     if (isCashier(req)) {
+      const allOrders = await Order.find({paymentStatus:"PAID"}).sort({ date: 1 });
+
+      const allOrderList = allOrders.map((order) => ({
+        orderId: order.orderId,
+        status: order.status,
+        bill: order.customerBill,
+        payment: order.paymentStatus,
+        date: order.date,
+      }));
+
+      return res.status(200).json(allOrderList);
+    }
     //For Users
     const customerOrders = await Order.find({
       email: req.user.email,

@@ -188,7 +188,7 @@ export async function loginWithGoogle(req, res) {
     }
   );
 
-  const user = await User.findOne({ email: response.email });
+  const user = await User.findOne({ email: response.data.email});
 
   if (user == null) {
     const newUser = await new User({
@@ -217,18 +217,18 @@ export async function loginWithGoogle(req, res) {
   } else {
     const token = jwt.sign(
       {
-        email: newUser.email,
-        firstName: newUser.firstName,
-        lastName: newUser.lastName,
-        role: newUser.role,
-        profilePic: newUser.profilePic,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role,
+        profilePic: user.profilePic,
       },
       process.env.JWT_KEY
     );
     res.status(200).json({
       message: "Login successful",
       token: token,
-      role: newUser.role,
+      role: user.role,
     });
   }
 }
