@@ -76,7 +76,7 @@ export async function deleteFood(req, res) {
     res.status(403).json({
       message: "You don't have the authorization to delete a product",
     });
-    return;
+    
   }
   try {
     await Food.deleteOne({ productId: req.params.productId });
@@ -98,6 +98,7 @@ export async function updateFood(req, res) {
     res.status(403).json({
       message: "You aren't authorized to update products",
     });
+    return
   }
 
   const productId = req.params.productId;
